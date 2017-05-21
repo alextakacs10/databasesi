@@ -53,6 +53,18 @@ def show_menu():
     print("\n----------------------------")
 
 
+def back_to_main_menu():
+    answer = input("\nWould you like to jump back to the main menu? [y/n]")
+    try:
+        if answer == "y":
+            show_menu()
+        else:
+            sys.exit()
+    except:
+        print("\nAction unknown.")
+        back_to_main_menu()
+
+
 def main():
     at_work = get_user_status()
     if not at_work:
@@ -64,9 +76,67 @@ def main():
 
         if action == "r":
             reset("application_process_sample_data.sql")
+
         elif action == "q":
             sys.exit("Goodbye!")
-        elif action == ""
+
+        elif action == "1":
+            cursor.execute("""SELECT first_name, last_name FROM mentors;""")
+            mentors = list(cursor.fetchall())
+            for num, data in enumerate(mentors):
+                print("{}. mentor: {} {}".format(num, data[0], data[1]))
+            back_to_main_menu()
+
+        elif action == "2":
+            cursor.execute("""SELECT first_name, last_name, nick_name FROM mentors WHERE city = 'Miskolc';""")
+            mentors = list(cursor.fetchall())
+            for data in mentors:
+                print("{} {}'s nickname is: {}".format(data[0],data[1], data[2]))
+            back_to_main_menu()
+
+        elif action == "3":
+            cursor.execute("""SELECT CONCAT(first_name, ' ', last_name) AS full_name, phone_number
+                              FROM applicants WHERE first_name = 'Carol'""")
+            applicant_info = cursor.fetchall()
+            print("{}'s phone number is {}".format(applicant_info[0][0], applicant_info[0][1]))
+            back_to_main_menu()
+
+        elif action == "4":
+            cursor.execute("""SELECT CONCAT(first_name, ' ', last_name) AS full_name, phone_number
+                              FROM applicants WHERE email LIKE '%@adipiscingenimmi.edu'""")
+            applicant_info = cursor.fetchall()
+            print("{}'s phone number is {}".format(applicant_info[0][0], applicant_info[0][1]))
+            back_to_main_menu()
+
+        elif action == "5":
+            cursor.execute("""INSERT INTO applicants (first_name, last_name, phone_number, email, application_code)
+                              VALUES ('Markus', 'Schaffarzyk', '003620/725-2666', 'djnovus@groovecoverage.com', 54823);
+                              SELECT * FROM applicants WHERE application_code = 54823""")
+            new_applicant = cursor.fetchall()
+            print("Our new applicant is {} {}, phone number: {}, email address: {} with {} as application id.".format(new_applicant[0][1],
+                                                                                                                      new_applicant[0][2],
+                                                                                                                      new_applicant[0][3],
+                                                                                                                      new_applicant[0][4],
+                                                                                                                      new_applicant[0][5]))
+            back_to_main_menu()
+
+        elif action == "6":
+            cursor.execute("""UPDATE applicants
+                              SET phone_number = '003670/223-7459'
+                              WHERE first_name = 'Jemima' AND last_name = 'Foreman';
+                              SELECT first_name, last_name, phone_number FROM applicants
+                              WHERE first_name = 'Jemima' AND last_name = 'Foreman';""")
+            applicant = cursor.fetchall()
+            print("{} {}'s phone number was updated to {}.".format(applicant[0][0], applicant[0][1], applicant[0][2]))
+            back_to_main_menu()
+
+        elif action == "7":
+            cursor.execute("""DELETE FROM applicants
+                              WHERE email LIKE '%mauriseu.net'""")
+            applicant = cursor.fetchall()
+            print("Everybody with the email address ending in @mauriseu.net was deleted from the database.")
+        else:
+            print("Sorry, action or task does not exist.")
 
 
 if __name__ == '__main__':
