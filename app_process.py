@@ -1,6 +1,7 @@
 import psycopg2
 from file_handler import import_sql
 import sys
+import task_handler
 
 try:
     # setup connection string
@@ -81,60 +82,40 @@ def main():
             sys.exit("Goodbye!")
 
         elif action == "1":
-            cursor.execute("""SELECT first_name, last_name FROM mentors;""")
-            mentors = list(cursor.fetchall())
-            for num, data in enumerate(mentors):
-                print("{}. mentor: {} {}".format(num, data[0], data[1]))
+            task_handler.show_every_mentor()
             back_to_main_menu()
 
         elif action == "2":
-            cursor.execute("""SELECT first_name, last_name, nick_name FROM mentors WHERE city = 'Miskolc';""")
-            mentors = list(cursor.fetchall())
-            for data in mentors:
-                print("{} {}'s nickname is: {}".format(data[0],data[1], data[2]))
+            task_handler.get_mentor_nicknames_by_city("Miskolc")
             back_to_main_menu()
 
         elif action == "3":
-            cursor.execute("""SELECT CONCAT(first_name, ' ', last_name) AS full_name, phone_number
-                              FROM applicants WHERE first_name = 'Carol'""")
-            applicant_info = cursor.fetchall()
-            print("{}'s phone number is {}".format(applicant_info[0][0], applicant_info[0][1]))
+            task_handler.get_phone_number_by_first_name("Carol")
             back_to_main_menu()
 
         elif action == "4":
-            cursor.execute("""SELECT CONCAT(first_name, ' ', last_name) AS full_name, phone_number
-                              FROM applicants WHERE email LIKE '%@adipiscingenimmi.edu'""")
-            applicant_info = cursor.fetchall()
-            print("{}'s phone number is {}".format(applicant_info[0][0], applicant_info[0][1]))
+            task_handler.get_phone_number_by_email("@adipiscingenimmi.edu")
             back_to_main_menu()
 
         elif action == "5":
-            cursor.execute("""INSERT INTO applicants (first_name, last_name, phone_number, email, application_code)
-                              VALUES ('Markus', 'Schaffarzyk', '003620/725-2666', 'djnovus@groovecoverage.com', 54823);
-                              SELECT * FROM applicants WHERE application_code = 54823""")
-            new_applicant = cursor.fetchall()
-            print("Our new applicant is {} {}, phone number: {}, email address: {} with {} as application id.".format(new_applicant[0][1],
-                                                                                                                      new_applicant[0][2],
-                                                                                                                      new_applicant[0][3],
-                                                                                                                      new_applicant[0][4],
-                                                                                                                      new_applicant[0][5]))
+            try:
+                task_handler.insert_new_applicant("Markus", "Schaffarzyk", "003620/725-2666", "djnovus@groovecoverage.com", 54823)
+            except:
+                print("User with this application ID already exists.")
+                back_to_main_menu()
+            task_handler.show_applicant_info(54823)
             back_to_main_menu()
 
         elif action == "6":
-            cursor.execute("""UPDATE applicants
-                              SET phone_number = '003670/223-7459'
-                              WHERE first_name = 'Jemima' AND last_name = 'Foreman';
-                              SELECT first_name, last_name, phone_number FROM applicants
-                              WHERE first_name = 'Jemima' AND last_name = 'Foreman';""")
-            applicant = cursor.fetchall()
-            print("{} {}'s phone number was updated to {}.".format(applicant[0][0], applicant[0][1], applicant[0][2]))
+            task_handler.change_phone_number("003670/223-7459", "Jemima", "Foreman")
             back_to_main_menu()
 
         elif action == "7":
-            cursor.execute("""DELETE FROM applicants
-                              WHERE email LIKE '%mauriseu.net'""")
-            applicant = cursor.fetchall()
-            print("Everybody with the email address ending in @mauriseu.net was deleted from the database.")
+            try:
+                task_handler.delete_by_email("mauriseu.net")
+            except:
+                print("No user(s) with such email address to delete.")
+            back_to_main_menu()
         else:
             print("Sorry, action or task does not exist.")
 
