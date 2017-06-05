@@ -28,7 +28,7 @@ def show_mentors_and_schools():
     title = "Mentors and school"
     headers, mentors_and_schools = queries.get_mentors_and_schools()
 
-    return render_template('results.html', colnames=headers, data=mentors_and_schools)
+    return render_template('results.html', colnames=headers, data=mentors_and_schools, title=title)
 
 
 @app.route("/all-school/")
@@ -36,7 +36,7 @@ def get_mentors_and_all_schools():
     title = "All school"
     headers, mentors_and_all_schools = queries.get_mentors_and_all_schools()
 
-    return render_template('results.html', colnames=headers, data=mentors_and_all_schools)
+    return render_template('results.html', colnames=headers, data=mentors_and_all_schools, title=title)
 
 
 @app.route("/mentors-by-country/")
@@ -44,7 +44,7 @@ def get_mentors_by_country():
     title = "Mentors by country"
     headers, mentors_by_country = queries.get_mentors_by_country()
 
-    return render_template('results.html', colnames=headers, data=mentors_by_country)
+    return render_template('results.html', colnames=headers, data=mentors_by_country, title=title)
 
 
 @app.route("/contacts/")
@@ -52,7 +52,7 @@ def get_contacts():
     title = "Contacts"
     headers, contacts = queries.get_contacts()
 
-    return render_template('results.html', colnames=headers, data=contacts)
+    return render_template('results.html', colnames=headers, data=contacts, title=title)
 
 
 @app.route("/applicants/")
@@ -60,7 +60,7 @@ def get_applicants_by_creation():
     title = "Applicants"
     headers, applicants_by_creation = queries.get_applicants_by_creation()
 
-    return render_template('results.html', colnames=headers, data=applicants_by_creation)
+    return render_template('results.html', colnames=headers, data=applicants_by_creation, title=title)
 
 
 @app.route("/applicants-and-mentors/")
@@ -68,7 +68,7 @@ def get_applicants_and_mentors():
     title = "Applicants and mentors"
     headers, applicants_and_mentors = queries.get_applicants_and_mentors()
 
-    return render_template('results.html', colnames=headers, data=applicants_and_mentors)
+    return render_template('results.html', colnames=headers, data=applicants_and_mentors, title=title)
 
 
 if __name__ == '__main__':
