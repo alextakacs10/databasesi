@@ -2,6 +2,9 @@
 # Created by https://www.gitignore.io/api/python,visualstudio
 
 ### Python ###
+# Database login information
+db_login.py
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
