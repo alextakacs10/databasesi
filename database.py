@@ -11,8 +11,9 @@ def handle_data(SQL):
         conn = psycopg2.connect(login_info)
         cursor = conn.cursor()
         cursor.execute(SQL)
+        header = [desc[0] for desc in cursor.description]
         result = cursor.fetchall()
-        return result
+        return result, header
     except psycopg2.DatabaseError:
         print("Can't connect to the server, try again.")
         abort(505)
